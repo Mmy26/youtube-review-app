@@ -53,15 +53,21 @@ export default new Vuex.Store({
      */
     async getSoaringVideos(context) {
       const key = context.getters.getApiKey;
-      const responce = await axios.get(
-        `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&chart=mostPopular&regionCode=JP&maxResults=50&key=${key}`
-      );
+      let responce: any = "";
+      do {
+        responce = await axios.get(
+          `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&chart=mostPopular&regionCode=JP&maxResults=10&key=${key}`
+        );
+      } while (responce.data.error);
       const payload = responce.data.items;
       const youtuberArray = [];
-      for (let i = 0; i <= 49; i++) {
-        const responce2 = await axios.get(
-          `https://www.googleapis.com/youtube/v3/channels?key=${key}&part=snippet,contentDetails,statistics,status&id=${payload[i].snippet.channelId}`
-        );
+      let responce2: any = "";
+      for (let i = 0; i <= 9; i++) {
+        do {
+          responce2 = await axios.get(
+            `https://www.googleapis.com/youtube/v3/channels?key=${key}&part=snippet,contentDetails,statistics,status&id=${payload[i].snippet.channelId}`
+          );
+        } while (responce.data.error);
         youtuberArray.push(responce2.data.items[0]);
       }
       const payload2 = youtuberArray;

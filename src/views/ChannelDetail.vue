@@ -108,9 +108,12 @@ export default class XXXComponent extends Vue {
     }
 
     const channelId = this.$route.params.id;
-    const response = await axios.get(
-      `https://www.googleapis.com/youtube/v3/channels?id=${channelId}&key=${this.apiKey}&part=snippet,contentDetails,statistics,status`
-    );
+    const response: any = "";
+    do {
+      await axios.get(
+        `https://www.googleapis.com/youtube/v3/channels?id=${channelId}&key=${this.apiKey}&part=snippet,contentDetails,statistics,status`
+      );
+    } while (response.data.error);
     const items = response.data.items[0];
     this.currentChannel = new Channels(
       items.id,
@@ -122,14 +125,20 @@ export default class XXXComponent extends Vue {
       items.statistics.subscriberCount,
       items.statistics.videoCount
     );
-    const responseVideo = await axios.get(
-      `https://www.googleapis.com/youtube/v3/search?part=id,snippet&type=video&channelId=${this.currentChannel.id}&maxResults=10&regionCode=JP&key=${this.apiKey}&order=date`
-    );
+    let responseVideo: any = "";
+    do {
+      responseVideo = await axios.get(
+        `https://www.googleapis.com/youtube/v3/search?part=id,snippet&type=video&channelId=${this.currentChannel.id}&maxResults=10&regionCode=JP&key=${this.apiKey}&order=date`
+      );
+    } while (response.data.error);
     const videoItems = responseVideo.data.items;
     for (const videoitem of videoItems) {
-      const responceVideoDetail = await axios.get(
-        `https://www.googleapis.com/youtube/v3/videos?id=${videoitem.id.videoId}&part=snippet,statistics&regionCode=JP&key=${this.apiKey}`
-      );
+      let responceVideoDetail: any = "";
+      do {
+        responceVideoDetail = await axios.get(
+          `https://www.googleapis.com/youtube/v3/videos?id=${videoitem.id.videoId}&part=snippet,statistics&regionCode=JP&key=${this.apiKey}`
+        );
+      } while (response.data.error);
       const videoDetailItems = responceVideoDetail.data.items[0];
       this.videoArr.push(
         new Videos(

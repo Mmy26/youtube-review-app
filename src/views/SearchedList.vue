@@ -145,10 +145,13 @@ export default class XXXComponent extends Vue {
     // 検索ワードをURLより取得
     this.searchText = this.$route.params.searchText;
 
-    const response2 = await axios.get(
-      // チャンネルの検索APIでidを取得
-      `https://www.googleapis.com/youtube/v3/search?part=id,snippet&type=channel&maxResults=10&regionCode=JP&key=${this.key}&q=${this.searchText}`
-    );
+    let response2: any = "";
+    do {
+      response2 = await axios.get(
+        // チャンネルの検索APIでidを取得
+        `https://www.googleapis.com/youtube/v3/search?part=id,snippet&type=channel&maxResults=10&regionCode=JP&key=${this.key}&q=${this.searchText}`
+      );
+    } while (response2.data.error);
     const channel1Items = response2.data.items;
 
     for (const item of channel1Items) {
@@ -157,9 +160,13 @@ export default class XXXComponent extends Vue {
 
     // 上で取得したidを使いチャンネルの情報をAPIで取得
     for (let channelId of this.channelIdList) {
-      const response3 = await axios.get(
-        `https://www.googleapis.com/youtube/v3/channels?key=${this.key}&maxResults=10&part=snippet,contentDetails,statistics,status&id=${channelId}`
-      );
+      let response3: any = "";
+      do {
+        response3 = await axios.get(
+          `https://www.googleapis.com/youtube/v3/channels?key=${this.key}&maxResults=10&part=snippet,contentDetails,statistics,status&id=${channelId}`
+        );
+      } while (
+        response2.data.error);
       const channel2Items = response3.data.items;
       for (let channel2Item of channel2Items) {
         this.searchedChannels.push(
@@ -177,10 +184,13 @@ export default class XXXComponent extends Vue {
       }
     }
 
-    const response1 = await axios.get(
-      // ビデオの検索APIでidを取得
-      `https://www.googleapis.com/youtube/v3/search?part=id,snippet&type=video&maxResults=10&regionCode=JP&key=${this.key}&q=${this.searchText}`
-    );
+    let response1: any = "";
+    do {
+      response1 = await axios.get(
+        // ビデオの検索APIでidを取得
+        `https://www.googleapis.com/youtube/v3/search?part=id,snippet&type=video&maxResults=10&regionCode=JP&key=${this.key}&q=${this.searchText}`
+      );
+    } while (response2.data.error);
     const payload1 = response1.data.items;
 
     for (let preVideo of payload1) {
@@ -188,9 +198,12 @@ export default class XXXComponent extends Vue {
     }
     // 上で取得したidを使いビデオの情報をAPIで取得
     for (let videoId of this.videoIdList) {
-      const response3 = await axios.get(
-        `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet,statistics&regionCode=JP&key=${this.key}`
-      );
+      let response3: any = "";
+      do {
+        response3 = await axios.get(
+          `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet,statistics&regionCode=JP&key=${this.key}`
+        );
+      } while (response2.data.error);
       const video = response3.data.items[0];
       this.searchedVideos.push(
         new Videos(

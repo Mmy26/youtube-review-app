@@ -128,9 +128,12 @@ export default class XXXComponent extends Vue {
 
     const videoId = this.$route.params.id;
     const key = this.$store.getters.getApiKey;
-    const responce = await axios.get(
-      `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&key=${key}&id=${videoId}`
-    );
+    let responce: any = "";
+    do {
+      responce = await axios.get(
+        `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&key=${key}&id=${videoId}`
+      );
+    } while (responce.data.error);
     const responceVideo = responce.data.items[0];
     this.videoDetail = new Videos(
       responceVideo.id,
