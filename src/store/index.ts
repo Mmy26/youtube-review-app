@@ -33,6 +33,7 @@ export default new Vuex.Store({
     ),
 
     apiKey: Array<string>(
+      "AIzaSyApkzQo4zN3y4hUm6kYHAIyQQ_fQBVXS3U",
       "AIzaSyD0gPqZj2y8L2QVei5d4NUMsthKN3ltr1c",
       "AIzaSyAzfoPPbpueXEcQypbLRLXXNCz5JQFDtlc",
       "AIzaSyDH4tzh3tFM5Ok8Q5jSpPHxpcQZMnK4U9M",
@@ -67,7 +68,7 @@ export default new Vuex.Store({
           responce2 = await axios.get(
             `https://www.googleapis.com/youtube/v3/channels?key=${key}&part=snippet,contentDetails,statistics,status&id=${payload[i].snippet.channelId}`
           );
-        } while (responce.data.error);
+        } while (responce2.data.error);
         youtuberArray.push(responce2.data.items[0]);
       }
       const payload2 = youtuberArray;

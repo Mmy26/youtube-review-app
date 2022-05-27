@@ -108,9 +108,9 @@ export default class XXXComponent extends Vue {
     }
 
     const channelId = this.$route.params.id;
-    const response: any = "";
+    let response: any = "";
     do {
-      await axios.get(
+      response = await axios.get(
         `https://www.googleapis.com/youtube/v3/channels?id=${channelId}&key=${this.apiKey}&part=snippet,contentDetails,statistics,status`
       );
     } while (response.data.error);
